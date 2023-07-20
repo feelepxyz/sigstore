@@ -29,6 +29,7 @@ jobs:
         run: |
           npm install -g @sigstore/cli
           sigstore attest ./statement.json --fulcio-url "https://fulcio.sigstage.dev" --rekor-url "https://rekor.sigstage.dev" -o bundle.sigstore
+          cat bundle.sigstore | jq ".verificationMaterial.x509CertificateChain.certificates[0].rawBytes" | tr -d '"' | base64 -d | openssl x509 -text -inform der -noout
       - uses: actions/upload-artifact@v3
         with:
           name: bundle.sigstore
